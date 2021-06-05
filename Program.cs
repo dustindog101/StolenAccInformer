@@ -11,8 +11,11 @@ namespace LeakedMSG
     {
         static void Main(string[] args)
         {
+            Console.Write("Enter config location: ");
+            string[] configsplit = load(Console.ReadLine()).Split('\n');
             Console.Write("Enter username and password(user:pass)");
-            string[] temp = Console.ReadLine().Split(':');
+            string[] temp = configsplit[0].Split(':');
+            Console.WriteLine();
             creds.email = temp[0];
             creds.pass = temp[1];
             Console.Write("Folder path: ");
@@ -58,15 +61,18 @@ namespace LeakedMSG
                 }
                 catch (Exception ex)
                 {
+                    stats.error++;
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"ERROR: {line}");
+                    Console.WriteLine($"ERROR: {line} -{ex.Message}-");
                     Console.ResetColor();
                 }
+                updateTitle(combo);
             }
         }
+        
         public static void updateTitle(string combo)
         {
-            Console.Title = $"Informer | Total combos: {stats.TotalCombos} | current combo:{combo} |combos done:{stats.done} |Emails sent:{stats.emailsSent}|Total emails:{stats.totalLines}";
+            Console.Title = ($@"Informer |current combo:Path.GetFileName(combo).Replace('+',' ').Replace()||Emails sent:{stats.emailsSent}|Errors:{stats.error}|Total emails:{stats.totalLines}");
         }
         public static void sendmsg(accinfo info)
         {
